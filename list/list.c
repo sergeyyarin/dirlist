@@ -53,7 +53,6 @@ void remove_node_data(node_t * node)
 {
     assert(node != NULL);
 
-    free(node->data->name);
     free(node->data->rsize);
     free(node->data);
 }
