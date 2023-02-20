@@ -24,7 +24,7 @@
 #define file_mode_str_len sizeof("rwxrwxrwx")
 #define max_file_path_len 4096
 #define max_file_name_len 255
-#define name_len (2 * max_file_name_len) + sizeof(link_path) + 1
+#define name_len ((2 * max_file_name_len) + sizeof(link_path) + 1)
 #define time_str_len 15
 #define readable_size_len 7
 
@@ -49,7 +49,7 @@ typedef struct
     off_t   size;
     char    *rsize;
     char    *time;
-    char    *name;
+    char    name[name_len];
 } info_t;
 
 typedef info_t node_data_t;
