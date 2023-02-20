@@ -57,7 +57,7 @@ int file_stat(const char * path, const struct dirent * entry, struct stat * fsta
     return stat_ret;
 }
 
-info_t * new_file_info(const struct stat * fstat)
+info_t * new_file_info(const struct stat * fstat, const char name[])
 {
     if (!fstat)
     {
@@ -75,6 +75,8 @@ info_t * new_file_info(const struct stat * fstat)
     new_info->size  = fstat->st_size;
     new_info->rsize = str_size(fstat->st_size);
     new_info->time  = str_time(fstat->st_mtim.tv_sec);
+
+    strncpy(new_info->name, name, name_len);
 
     return new_info;
 }
