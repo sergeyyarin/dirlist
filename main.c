@@ -58,21 +58,18 @@ int main(int argc, char **argv)
     for (int count = 0; count < dir_entries; count++)
     {
         struct dirent * entry = dir_entry_list[count];
-        struct stat * fstat = calloc(1, sizeof(struct stat));
-        assert(fstat != NULL);
+        struct stat fstat;
 
         char file_path[max_file_path_len] = {};
         cat_str(file_path, max_file_path_len, 3, dir_path, "/", entry->d_name);
 
-        if (file_stat(file_path, entry, fstat) == -1)
+        if (file_stat(file_path, entry, &fstat) == -1)
         {
             fprintf(stderr, "Can't read file info: %s.\n", strerror(errno));
-            free(fstat);
             continue;
         }
 
-        char * file_name = calloc(1, name_len);
-        assert(file_name != NULL);
+        char file_name[name_len] = {};
 
         cat_str(file_name, max_file_name_len, 1, entry->d_name);
 
@@ -86,8 +83,6 @@ int main(int argc, char **argv)
             if (bytes == -1)
             {
                 fprintf(stderr, "Can't read link destination: %s\n", strerror(errno));
-                free(fstat);
-                free(file_name);
                 continue;
             } else if (bytes > 0)
             {
@@ -96,12 +91,9 @@ int main(int argc, char **argv)
             }
         }
 
-        blocks += fstat->st_blocks;
+        blocks += fstat.st_blocks;
 
-        info_t * info = new_file_info(fstat);
-        info->name  = file_name;
-
-        free(fstat);
+        info_t * info = new_file_info(&fstat, file_name);
 
         add_node(head, info);
     }
